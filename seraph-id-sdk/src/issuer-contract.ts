@@ -1,6 +1,5 @@
 // Copyright (c) 2019 Swisscom Blockchain AG
 // Licensed under MIT License
-import { u } from '@cityofzion/neon-core';
 import { rpc, sc } from '@cityofzion/neon-js';
 import { DIDNetwork, ISchema, IssuerOperation, SeraphIDError } from './common';
 import { SeraphIDContractBase } from './contract-base';
@@ -70,6 +69,7 @@ export class SeraphIDIssuerContract extends SeraphIDContractBase {
         sc.ContractParam.byteArray(message),
         sc.ContractParam.byteArray(signature)]
     });
+    console.log(this.scriptHash);
     return this.sendSignedTransaction(script, issuerPrivateKey, gas);
   }
   
@@ -85,7 +85,6 @@ export class SeraphIDIssuerContract extends SeraphIDContractBase {
    * @returns Transaction hash.
    */
   public async ResetRecovery(threshold: number, members:string[], recoveryIndexes: number[], message: string, signatures: string[], issuerPrivateKey: string, gas?: number): Promise<string> {
-    const sb = new sc.ScriptBuilder();
     const script = sc.createScript({
       scriptHash: this.scriptHash,
       operation: IssuerOperation.SetRecovery,
@@ -159,7 +158,6 @@ export class SeraphIDIssuerContract extends SeraphIDContractBase {
       [paramSchemaName],
     )
     const seraphResult = this.extractResult(res);
-    console.log(seraphResult);
     if (!seraphResult.success) {
       throw new SeraphIDError(seraphResult.error, res);
     }

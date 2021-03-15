@@ -55,7 +55,10 @@ export class SeraphIDContractBase {
     });
     
     const invokeResult = await client.invokeScript(u.HexString.fromHex(script), transaction.signers);
-    console.log(script);
+    // if (invokeResult.state != "HALT") {
+    //   throw new SeraphIDError('invoke script failed', invokeResult.exception);
+    // }
+    
     transaction.systemFee = u.BigInteger.fromNumber(invokeResult.gasconsumed);
 
     transaction.witnesses[0] = new Witness({ invocationScript: "", verificationScript: u.HexString.fromBase64(account.contract.script)});

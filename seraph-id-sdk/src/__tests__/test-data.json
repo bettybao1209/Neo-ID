@@ -30,7 +30,7 @@
   "walletPassword": "1111",
   "walletOwnerPrivateKey": "L4kETdqUKaMqh4UrNjE4egm79a3gGB5HCgx1vnDWb25PXbnDxakr",
   "ownerDID": "did:neoid:priv:NgvroMbw1pNZGY9zXNtSyrddVaZLza6CVM",
-  "timeToWaitForBlockConfirmation": 35000,
+  "timeToWaitForBlockConfirmation": 15000,
   "recoveryKey": "03a81eaf7368b7a0b6b83580d19d6b586172018d32c4c68446e205c16873ef92d5",
   "initialMessage": "1234",
   "initialSignature": "30a0fef7253b965991b87208e6dfc4ec72360bb2f02db7a39706cd57b4f821dc6d16b41126a1c72cc148b0553a1470c183ab2ab95d4f459386e15e9e07a6c471",

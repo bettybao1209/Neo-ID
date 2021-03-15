@@ -103,9 +103,8 @@ export class SeraphIDWallet extends wallet.Wallet {
    */
   public getClaim(claimId: string): IClaim | undefined {
     for (const acc of this.accounts2) {
-      if (acc.getClaim(claimId)) {
-        return acc.getClaim(claimId);
-      }
+      var claim = acc.getClaim(claimId);
+      if (claim) return claim;
     }
   }
 
@@ -119,7 +118,6 @@ export class SeraphIDWallet extends wallet.Wallet {
     if (account) {
       return account.getAllClaims();
     }
-
     return [];
   }
 
