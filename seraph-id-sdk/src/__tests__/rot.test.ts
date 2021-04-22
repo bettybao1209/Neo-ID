@@ -3,7 +3,6 @@
 
 import { DIDNetwork } from '../common';
 import { SeraphIDRootOfTrust } from '../rot';
-import {u} from '@cityofzion/neon-core';
 import testData from './test-data.json';
 
 const contract = new SeraphIDRootOfTrust(testData.rotScriptHash, testData.neoRpcUrl, DIDNetwork.PrivateNet, testData.magic);

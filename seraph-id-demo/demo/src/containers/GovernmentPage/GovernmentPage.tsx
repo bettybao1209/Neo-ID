@@ -397,9 +397,6 @@ export class GovernmentPage extends React.Component<Props, State> {
                         console.error('issueClaim ERR', err);
                         this.handleCredIssuingError(value);
                     }
-
-
-
                 }, 2000);
             }
         ).catch(err => {

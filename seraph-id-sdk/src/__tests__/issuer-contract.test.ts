@@ -23,7 +23,7 @@ test('SeraphIDContract.getIssuerDID', () => {
 });
 
 test('SeraphIDContract.getIssuerPublicKeys', () => {
-  expect(contract.getIssuerPublicKeys()).resolves.toEqual(testData.issuerPublicKeys);
+  expect(contract.getAdminList()).resolves.toEqual(testData.issuerPublicKeys);
 });
 
 test('SeraphIDContract.getSchemaDetails.nonexistentSchema', () => {

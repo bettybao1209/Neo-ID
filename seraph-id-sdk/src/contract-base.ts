@@ -55,9 +55,9 @@ export class SeraphIDContractBase {
     });
     
     const invokeResult = await client.invokeScript(u.HexString.fromHex(script), transaction.signers);
-    // if (invokeResult.state != "HALT") {
-    //   throw new SeraphIDError('invoke script failed', invokeResult.exception);
-    // }
+    if (invokeResult.state != "HALT") {
+      throw new SeraphIDError('invoke script failed', invokeResult.exception);
+    }
     
     transaction.systemFee = u.BigInteger.fromNumber(invokeResult.gasconsumed);
 
@@ -78,8 +78,8 @@ export class SeraphIDContractBase {
     if (!res) {
       throw new SeraphIDError('Transaction failed: ' + transaction.hash, res);
     }
-    console.log(transaction.hash(this.magic));
-    return transaction.hash(this.magic);
+    console.log(transaction.hash());
+    return transaction.hash();
   }
 
   /**

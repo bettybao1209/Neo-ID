@@ -1,5 +1,5 @@
 {
-  "name": "@justin_jin/seraph-id-sdk",
+  "name": "@sbc/seraph-id-sdk",
   "version": "3.0.1",
   "description": "Seraph ID SDK",
   "main": "lib/index.js",
@@ -34,9 +34,9 @@
   "homepage": "https://github.com/swisscom-blockchain/seraph-id-sdk#readme",
   "devDependencies": {
     "@types/crypto-js": "^4.0.1",
-    "@types/jest": "^24.0.14",
+    "@types/jest": "^26.0.2",
     "crypto-js": "^3.1.9-1",
-    "jest": "24.7.1",
+    "jest": "^24.7.1",
     "prettier": "^1.18.2",
     "ts-jest": "^26.5.2",
     "tslint": "^5.17.0",
@@ -47,9 +47,9 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@cityofzion/neon-api": "file:./neon-js-5.0.0-next.6/packages/neon-api/src",
-    "@cityofzion/neon-core": "file:./neon-js-5.0.0-next.6/packages/neon-core/src",
-    "@cityofzion/neon-js": "file:./neon-js-5.0.0-next.6/packages/neon-js/src"
+    "@cityofzion/neon-api": "file:./neon-js-5.0.0-next.7/packages/neon-api/lib",
+    "@cityofzion/neon-core": "file:./neon-js-5.0.0-next.7/packages/neon-core/lib",
+    "@cityofzion/neon-js": "file:./neon-js-5.0.0-next.7/packages/neon-js/lib"
   },
   "resolutions": {
     "crypto-js": "4.0.0",
