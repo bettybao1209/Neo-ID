@@ -1,0 +1,176 @@
+{
+  "methods": [
+    {
+      "name": "totalSupply",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Integer",
+      "safe": true
+    },
+    {
+      "name": "setGasPerBlock",
+      "parameters": [
+        {
+          "name": "gasPerBlock",
+          "type": "Integer"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Boolean",
+      "safe": false
+    },
+    {
+      "name": "getGasPerBlock",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Integer",
+      "safe": true
+    },
+    {
+      "name": "unclaimedGas",
+      "parameters": [
+        {
+          "name": "account",
+          "type": "ByteArray"
+        },
+        {
+          "name": "end",
+          "type": "Integer"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Integer",
+      "safe": true
+    },
+    {
+      "name": "registerCandidate",
+      "parameters": [
+        {
+          "name": "pubkey",
+          "type": "ByteArray"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Boolean",
+      "safe": false
+    },
+    {
+      "name": "unregisterCandidate",
+      "parameters": [
+        {
+          "name": "pubkey",
+          "type": "ByteArray"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Boolean",
+      "safe": false
+    },
+    {
+      "name": "vote",
+      "parameters": [
+        {
+          "name": "account",
+          "type": "ByteArray"
+        },
+        {
+          "name": "voteTo",
+          "type": "ByteArray"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Boolean",
+      "safe": false
+    },
+    {
+      "name": "getCandidates",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Array",
+      "safe": true
+    },
+    {
+      "name": "getCommittee",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Array",
+      "safe": true
+    },
+    {
+      "name": "getNextBlockValidators",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Array",
+      "safe": true
+    },
+    {
+      "name": "balanceOf",
+      "parameters": [
+        {
+          "name": "account",
+          "type": "ByteArray"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Integer",
+      "safe": true
+    },
+    {
+      "name": "transfer",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "ByteArray"
+        },
+        {
+          "name": "to",
+          "type": "ByteArray"
+        },
+        {
+          "name": "amount",
+          "type": "Integer"
+        },
+        {
+          "name": "data",
+          "type": "Any"
+        }
+      ],
+      "offset": 0,
+      "returntype": "Boolean",
+      "safe": false
+    },
+    {
+      "name": "symbol",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "String",
+      "safe": true
+    },
+    {
+      "name": "decimals",
+      "parameters": [],
+      "offset": 0,
+      "returntype": "Integer",
+      "safe": true
+    }
+  ],
+  "events": [
+    {
+      "name": "Transfer",
+      "parameters": [
+        {
+          "name": "from",
+          "type": "Hash160"
+        },
+        {
+          "name": "to",
+          "type": "Hash160"
+        },
+        {
+          "name": "amount",
+          "type": "Integer"
+        }
+      ]
+    }
+  ]
+}
