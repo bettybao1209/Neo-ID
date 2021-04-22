@@ -15,6 +15,7 @@ module.exports = function (rootDir) {
         crypto: false,
         bufferutil: false,
         "utf-8-validate": false,
+        util: false
       },
     },
     module: {
