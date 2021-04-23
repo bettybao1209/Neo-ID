@@ -1,6 +1,8 @@
 // Copyright (c) 2019 Swisscom Blockchain AG
 // Licensed under MIT License
-import { rpc, sc } from '@cityofzion/neon-js';
+
+import { rpc, sc} from '@cityofzion/neon-core';
+
 import { DIDNetwork, ISchema, IssuerOperation, SeraphIDError } from './common';
 import { SeraphIDContractBase } from './contract-base';
 
@@ -140,11 +142,13 @@ export class SeraphIDIssuerContract extends SeraphIDContractBase {
     const paramName = sc.ContractParam.string(schema.name);
     const paramDefinition = sc.ContractParam.string(JSON.stringify(schema));
     
-    return this.sendSignedTransaction(sc.createScript({
+    const script = sc.createScript({
       scriptHash: this.scriptHash,
-      operation: IssuerOperation.RegisterSchema,
+      operation: "test",
       args: [paramName, paramDefinition]
-    }), issuerPrivateKey, gas);
+    })
+    console.log('script:', script)
+    return this.sendSignedTransaction(script, issuerPrivateKey, gas);
   }
 
   /**
