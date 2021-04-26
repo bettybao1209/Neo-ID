@@ -5,6 +5,9 @@ import { rpc, tx, u, sc, wallet } from '@cityofzion/neon-core';
 // import { StackItem } from '@cityofzion/neon-core/sc';
 import neonJs from "@cityofzion/neon-js";
 import { DIDNetwork, IResult, SeraphIDError } from './common';
+import util from 'util';
+
+global.TextEncoder = util.TextEncoder;
 
 const { StackItem } = sc;
 // const { Witness } = tx;

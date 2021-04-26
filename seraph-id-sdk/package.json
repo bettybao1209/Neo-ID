@@ -55,5 +55,8 @@
   "resolutions": {
     "crypto-js": "4.0.0",
     "**/crypto-js": "4.0.0"
+  },
+  "peerDependencies": {
+    "bignumber.js": "^9.0.1"
   }
 }
