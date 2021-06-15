@@ -10,10 +10,6 @@ const contract = new SeraphIDRootOfTrust(testData.rotScriptHash, testData.neoRpc
 // Increase test suite timeout as we need to wait for block confirmation.
 jest.setTimeout(240000);
 
-afterAll(async done => {
-  done();
-});
-
 test.only('SeraphIDRootOfTrust.getName', () => {
   expect(contract.getName()).resolves.toBe(testData.rotName);
 });

@@ -1,18 +1,14 @@
 // Copyright (c) 2019 Swisscom Blockchain AG
 // Licensed under MIT License
 
-import { rpc, tx, u, sc, wallet } from '@cityofzion/neon-core';
-// import { StackItem } from '@cityofzion/neon-core/sc';
-import neonJs from "@cityofzion/neon-js";
+import { rpc, tx, u, wallet, sc} from '@cityofzion/neon-core';
+import neoCore from '@cityofzion/neon-core';
+import bundle from '@cityofzion/neon-api';
 import { DIDNetwork, IResult, SeraphIDError } from './common';
-import util from 'util';
+// import util from 'util';
+const api = bundle(neoCore);
 
-global.TextEncoder = util.TextEncoder;
-
-const { StackItem } = sc;
-// const { Witness } = tx;
-// const { api } = neonJs(neonCore);
-// const { calculateNetworkFee, getFeeInformation } = api;
+// global.TextEncoder = util.TextEncoder;
 
 /**
  * Base class for Seraph ID smart contracts.
@@ -57,7 +53,7 @@ export class SeraphIDContractBase {
       validUntilBlock: currentHeight + tx.Transaction.MAX_TRANSACTION_LIFESPAN - 1,
       signers: [new tx.Signer({account: account.scriptHash, scopes: tx.WitnessScope.CalledByEntry})],
       attributes: [],
-      script: script
+      script: u.HexString.fromHex(script, false)
     });
     
     const invokeResult = await client.invokeScript(u.HexString.fromHex(script), transaction.signers);
@@ -68,10 +64,9 @@ export class SeraphIDContractBase {
     transaction.systemFee = u.BigInteger.fromNumber(invokeResult.gasconsumed);
 
     transaction.witnesses[0] = new tx.Witness({ invocationScript: "", verificationScript: u.HexString.fromBase64(account.contract.script)});
-    const { feePerByte, executionFeeFactor } = await (neonJs as any).api.getFeeInformation(
-      client
-    );
-    transaction.networkFee =  (neonJs as any).api.calculateNetworkFee(
+    const { feePerByte, executionFeeFactor } = await api.api.getFeeInformation(client);
+
+    transaction.networkFee =  api.api.calculateNetworkFee(
       transaction,
       feePerByte,
       executionFeeFactor
