@@ -54,6 +54,8 @@ export class AccommodationDapp extends React.Component<Props, State> {
 
         const agencyVerifier = new SeraphIDVerifier(configs.GOVERNMENT_SCRIPT_HASH, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
         const passportClaim = value.passportClaim;
+        console.log(passportClaim.validFrom);
+        console.log(passportClaim.validTo);
         console.log('passport Claim to Verify: ', value.passportClaim);
 
         if (passportClaim) {

@@ -6,7 +6,10 @@ import './FlatCards.css';
 import { theme } from '../../containers/App';
 import { Typography, Fab, Card, CardActionArea, CardMedia, CardContent, CardActions } from '@material-ui/core';
 import MediaQuery from 'react-responsive';
+import * as configs from '../../configs';
+import {PriceFeedService} from '../../pricefeed/pricefeedservice';
 
+const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
 
 interface FlatCard {
     id: number;
@@ -22,18 +25,20 @@ interface Props {
     flatBooked: any;
 }
 
-function FlatCards({ flatBooked }: Props) {
+async function FlatCards({ flatBooked }: Props) {
 
+    var price = await pricefeed.getPrice();
+    console.log(200/Number(price));
     const topFlats: FlatCard[] = [
-        { id: 1, pictureRef: 'flat_1', city: 'Florence', price: '200', rooms: 2, meters: 65, others: 'Bathtub' },
-        { id: 2, pictureRef: 'flat_2', city: 'Beijing', price: '280', rooms: 3, meters: 110, others: 'Garden' },
-        { id: 3, pictureRef: 'flat_3', city: 'New York', price: '370', rooms: 4, meters: 155, others: 'Terrace' },
+        { id: 1, pictureRef: 'flat_1', city: 'Florence', price: String(200/Number(price)), rooms: 2, meters: 65, others: 'Bathtub' },
+        { id: 2, pictureRef: 'flat_2', city: 'Beijing', price: String(280/Number(price)), rooms: 3, meters: 110, others: 'Garden' },
+        { id: 3, pictureRef: 'flat_3', city: 'New York', price: String(370/Number(price)), rooms: 4, meters: 155, others: 'Terrace' },
     ];
 
     const bottomFlats: FlatCard[] = [
-        { id: 4, pictureRef: 'flat_4', city: 'Paris', price: '195', rooms: 2, meters: 54, others: 'Position' },
-        { id: 5, pictureRef: 'flat_5', city: 'Zürich', price: '450', rooms: 5, meters: 240, others: 'Magnific view' },
-        { id: 6, pictureRef: 'flat_6', city: 'Madrid', price: '210', rooms: 2, meters: 80, others: 'Pool' },
+        { id: 4, pictureRef: 'flat_4', city: 'Paris', price: String(195/Number(price)), rooms: 2, meters: 54, others: 'Position' },
+        { id: 5, pictureRef: 'flat_5', city: 'Zürich', price: String(450/Number(price)), rooms: 5, meters: 240, others: 'Magnific view' },
+        { id: 6, pictureRef: 'flat_6', city: 'Madrid', price: String(210/Number(price)), rooms: 2, meters: 80, others: 'Pool' },
     ];
 
     const renderFlatsInRow = (flats: FlatCard[]) => {
