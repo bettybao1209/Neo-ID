@@ -122,16 +122,27 @@ export class SeraphIDWallet extends wallet.Wallet {
   }
 
   /**
-   * Creates a new keyPair and associated DID.
+   * Creates a DID with specified private key.
    * @returns The generated DID string.
    */
-  public createDID(network: string): string {
-    const privKey = wallet.generatePrivateKey();
+  public generateDID(network: string, privKey: string): string {
     const acct = new SeraphIDAccount(privKey, network);
     this.addAccount2(acct);
 
     return acct.getDID();
   }
+
+    /**
+   * Creates a new keyPair and associated DID.
+   * @returns The generated DID string.
+   */
+  public createDID(network: string): string {
+  const privKey = wallet.generatePrivateKey();
+  const acct = new SeraphIDAccount(privKey, network);
+  this.addAccount2(acct);
+
+  return acct.getDID();
+}
 
   /**
    * Returns the DID for a given account index in the wallet.

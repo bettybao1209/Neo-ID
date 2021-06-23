@@ -8,6 +8,7 @@ import { Typography, Fab, Card, CardActionArea, CardMedia, CardContent, CardActi
 import MediaQuery from 'react-responsive';
 import * as configs from '../../configs';
 import {PriceFeedService} from '../../pricefeed/pricefeedservice';
+import { useState, useEffect } from 'react';
 
 const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
 
@@ -25,20 +26,29 @@ interface Props {
     flatBooked: any;
 }
 
-async function FlatCards({ flatBooked }: Props) {
+function GetTokenPrice(price: number, tokenPrice: number): string{
+    return String((price/tokenPrice).toFixed(8));
+}
 
-    var price = await pricefeed.getPrice();
-    console.log(200/Number(price));
+function FlatCards({ flatBooked }: Props) {
+    const [tokenPrice, setPrice] = useState(0);
+    useEffect(() => {
+        async function getPriceFunc(){
+            let response = await pricefeed.getPrice();
+            setPrice(response);
+        }
+        getPriceFunc()
+    }, []);
     const topFlats: FlatCard[] = [
-        { id: 1, pictureRef: 'flat_1', city: 'Florence', price: String(200/Number(price)), rooms: 2, meters: 65, others: 'Bathtub' },
-        { id: 2, pictureRef: 'flat_2', city: 'Beijing', price: String(280/Number(price)), rooms: 3, meters: 110, others: 'Garden' },
-        { id: 3, pictureRef: 'flat_3', city: 'New York', price: String(370/Number(price)), rooms: 4, meters: 155, others: 'Terrace' },
+        { id: 1, pictureRef: 'flat_1', city: 'Florence', price: tokenPrice === 0 ? '' : GetTokenPrice(200, tokenPrice), rooms: 2, meters: 65, others: 'Bathtub' },
+        { id: 2, pictureRef: 'flat_2', city: 'Beijing', price: tokenPrice === 0 ? '' : GetTokenPrice(280, tokenPrice), rooms: 3, meters: 110, others: 'Garden' },
+        { id: 3, pictureRef: 'flat_3', city: 'New York', price: tokenPrice === 0 ? '' : GetTokenPrice(370, tokenPrice), rooms: 4, meters: 155, others: 'Terrace' },
     ];
 
     const bottomFlats: FlatCard[] = [
-        { id: 4, pictureRef: 'flat_4', city: 'Paris', price: String(195/Number(price)), rooms: 2, meters: 54, others: 'Position' },
-        { id: 5, pictureRef: 'flat_5', city: 'Zürich', price: String(450/Number(price)), rooms: 5, meters: 240, others: 'Magnific view' },
-        { id: 6, pictureRef: 'flat_6', city: 'Madrid', price: String(210/Number(price)), rooms: 2, meters: 80, others: 'Pool' },
+        { id: 4, pictureRef: 'flat_4', city: 'Paris', price: tokenPrice === 0 ? '' : GetTokenPrice(195, tokenPrice), rooms: 2, meters: 54, others: 'Position' },
+        { id: 5, pictureRef: 'flat_5', city: 'Zürich', price: tokenPrice === 0 ? '' : GetTokenPrice(450, tokenPrice), rooms: 5, meters: 240, others: 'Magnific view' },
+        { id: 6, pictureRef: 'flat_6', city: 'Madrid', price: tokenPrice === 0 ? '' : GetTokenPrice(210, tokenPrice), rooms: 2, meters: 80, others: 'Pool' },
     ];
 
     const renderFlatsInRow = (flats: FlatCard[]) => {
@@ -154,8 +164,8 @@ function FlatCard({ imageRef, city, price, rooms, meters, others, clicked }: Car
                             {city}
                         </Typography>
 
-                        <Typography gutterBottom variant="h5" component="h2">
-                            <strong> {price} $ </strong>
+                        <Typography gutterBottom variant="h6" component="h2">
+                            <strong> {price} GAS </strong>
                             <small className="PriceSpec"> /night </small>
                         </Typography>
                     </div>

@@ -1,8 +1,11 @@
 
-import { rpc, sc, u} from '@cityofzion/neon-core';
+import { wallet, rpc, sc, u, CONST} from '@cityofzion/neon-core';
 import { SeraphIDError, DIDNetwork, IResult } from '@sbc/seraph-id-sdk/common';
 import { SeraphIDContractBase } from '@sbc/seraph-id-sdk/contract-base';
 import * as configs from '../configs';
+import neoCore from '@cityofzion/neon-core';
+import bundle from '@cityofzion/neon-api';
+const api = bundle(neoCore);
 /**
  * Direct communication interface with Seraph ID smart contract of the Issuer.
  */
@@ -27,11 +30,11 @@ export class PriceFeedService extends SeraphIDContractBase {
    * @returns Issuer's name.
    */
  public async getPrice(): Promise<number> {
-  const symbol = sc.ContractParam.string("NEO-USDT");
+  const symbol = sc.ContractParam.string("GAS-USDT");
   const index = await this.getBestBlock();
   console.log("the block index is " + index);
   const blockIndex = sc.ContractParam.string(index);
-  const provider = sc.ContractParam.array(sc.ContractParam.hash160(configs.BINANCE_PROVIDER));
+  const provider = sc.ContractParam.array(sc.ContractParam.hash160(configs.OKEX_PROVIDER));
 
   const client = new rpc.RPCClient(this.networkRpcUrl);
   const res: any = await client.invokeFunction(
@@ -44,7 +47,7 @@ export class PriceFeedService extends SeraphIDContractBase {
     throw new SeraphIDError(result.error, res);
   }
   const price = result.result.value;
-  // console.log(u.base642utf8(price));
+  console.log(parseFloat(u.base642utf8(price)));
   return parseFloat(u.base642utf8(price));
 }
 
@@ -54,6 +57,28 @@ export class PriceFeedService extends SeraphIDContractBase {
    */
  public async getBestBlock(): Promise<string> {
     return this.getStringFromOperation(this.scriptHash, "bestBlockIndex");
+  }
+
+  public async payFlat(ownerPrivKey: string, flatWalletAddress: string, amount: number): Promise<String>{
+    const client = new rpc.NeoServerRpcClient(this.networkRpcUrl);
+    const facade = await api.api.NetworkFacade.fromConfig({ node: client });
+    const fromAccount = new wallet.Account(ownerPrivKey);
+
+    const txid = await facade.transferToken(
+      [
+        {
+          from: fromAccount,
+          to: flatWalletAddress,
+          contractHash: CONST.NATIVE_CONTRACT_HASH.GasToken,
+          decimalAmt: amount,
+        },
+      ],
+      {
+        signingCallback: api.api.signWithAccount(fromAccount),
+      }
+    );
+    console.log("transfer completed with tx id: " + txid);
+    return txid;
   }
 
   protected extractResult(res: rpc.InvokeResult): IResult {

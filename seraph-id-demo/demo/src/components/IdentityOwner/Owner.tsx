@@ -10,13 +10,19 @@ import { ApplicationContext, Agents } from '../../application-context';
 import SadFaceIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import HappyFaceIcon from '@material-ui/icons/SentimentVerySatisfied';
 import CodeIcon from '@material-ui/icons/Code';
+import * as configs from '../../configs';
 
 // Import from seraph-id-sdk 
 import { DIDNetwork } from '@sbc/seraph-id-sdk';
 
+import { PriceFeedService } from '../../pricefeed/pricefeedservice';
+
 const OWNER_GOV_BTN_LABEL = 'Apply for Passport';
 const OWNER_AGENCY_BTN_LABEL = 'Book a flat';
 const OWNER_DOOR_BTN_LABEL = 'Open the door';
+const PAY_FLAT_BTN_LABEL = 'Pay the flat';
+
+const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
 
 
 interface Props {
@@ -297,15 +303,40 @@ export class Owner extends React.Component<Props, State> {
             if (value.actions.demoOwnerOpenDoor === 'todo') {
 
                 if (value.actions.demoOwnerCredFromAgency === 'success') {
-                    return (
-                        <div>
-                            <p> Use the access key you just got from the {Agents.smartAgency},
-                                <br />  to open the door of the accommodation. </p>
-                            <Fab onClick={() => this.openDoor(value)} variant="extended" color="primary">
-                                {OWNER_DOOR_BTN_LABEL}
-                            </Fab>
-                        </div>
-                    );
+                    const accessKeyClaimID = localStorage.getItem('accessKeyClaimID');
+                    console.log('accessKeyClaimID', accessKeyClaimID);
+                    if (accessKeyClaimID) {
+                        const accessKeyClaim = this.props.ownerWallet.getClaim(accessKeyClaimID);
+                        if (accessKeyClaim) {
+                            console.log(localStorage);
+                            if (localStorage.getItem("isPaid") === 'false'){
+                                return (
+                                    <div>
+                                        <p> You have not paid the flat yet.
+                                         </p>
+                                        <Tooltip title={Agents.owner + " didn't pay the flat yet"}>
+                                            <div>
+                                                <Fab onClick={() => this.payFlat(value)} color="primary" variant="extended">
+                                                    {PAY_FLAT_BTN_LABEL}
+                                                </Fab>
+                                            </div>
+                                        </Tooltip>
+                                    </div>
+                                );
+                            }
+                            else {
+                                return (
+                                    <div>
+                                        <p> Use the access key you just got from the {Agents.smartAgency},
+                                            <br />  to open the door of the accommodation. </p>
+                                        <Fab onClick={() => this.openDoor(value)} variant="extended" color="primary">
+                                            {OWNER_DOOR_BTN_LABEL}
+                                        </Fab>
+                                    </div>
+                                );
+                            }
+                        }
+                    }    
                 } else {
                     return (
                         <div>
@@ -363,6 +394,27 @@ export class Owner extends React.Component<Props, State> {
 
     }
 
+    payFlat = (value: any) => {
+        const accessKeyClaimID = localStorage.getItem('accessKeyClaimID');
+        console.log('accessKeyClaimID', accessKeyClaimID);
+        if (accessKeyClaimID) {
+            const accessKeyClaim = this.props.ownerWallet.getClaim(accessKeyClaimID);
+
+            if (accessKeyClaim) {
+                value.accessKeyClaim = accessKeyClaim;
+                const txid = pricefeed.payFlat(configs.OWNER_PRIVATE_KEY, configs.FLAT_WALLET_ADDRESS, Number(localStorage.getItem("price")));
+                if (txid != null){
+                    value.changeAction('demoOwnerPayFlat', 'demoOwnerOpenDoor');
+                }
+                localStorage.setItem('isPaid', "true");
+            } else {
+                value.changeAction('demoOwnerOpenDoor', 'sharingCredentialsFailed');
+            }
+        } else {
+            value.changeAction('demoOwnerOpenDoor', 'sharingCredentialsFailed');
+        }
+    }
+
     openDoor = (value: any) => {
 
         value.changeAction('demoOwnerOpenDoor', 'sharingCredentials');
@@ -397,7 +449,7 @@ export class Owner extends React.Component<Props, State> {
 
         value.changeAction('demoOwnerDID', 'waiting');
 
-        const did = this.props.ownerWallet.createDID(DIDNetwork.PrivateNet);
+        const did = this.props.ownerWallet.generateDID(DIDNetwork.PrivateNet, configs.OWNER_PRIVATE_KEY);
         localStorage.setItem('ownerDID', did);
         console.log('created DID', did);
 

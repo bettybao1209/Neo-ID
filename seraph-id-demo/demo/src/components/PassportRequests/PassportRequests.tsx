@@ -48,18 +48,6 @@ export class PassportReq {
 function PassportRequests({ activeRequest, issued, denied }: Props) {
 
     let requests: PassportReq[] = [
-        new PassportReq('Emma', 'Smith', '11.03.1992', 'Italy', 'Rome', 'female', 'BF0192332F', PassportStatus.issued, ' '),
-        new PassportReq('William', 'Jones', '17.06.1949', 'Italy', 'Milan', 'male', 'ABA9875413', PassportStatus.issued, ' '),
-        new PassportReq('Grace', 'Williams', '30.11.1983', 'China', 'Beijing', 'female', 'KF0192332E', PassportStatus.issued, ' '),
-        new PassportReq('Richard', 'Taylor', '28.09.1970', 'England', 'London', 'male', 'GF0192311L', PassportStatus.issued, ' '),
-        new PassportReq('Jacob', 'Brown', '22.10.2001', 'Singapore', 'Singapore', 'male', 'LF0194332R', PassportStatus.denied, ' '),
-        new PassportReq('Elizabeth', 'Davies', '20.06.1991', 'Japan', 'Tokyo', 'female', 'KF0142332C', PassportStatus.issued, ' '),
-        new PassportReq('George', 'Evans', '13.03.2000', 'Italy', 'Rome', 'male', 'JF0192382D', PassportStatus.issued, ' '),
-        new PassportReq('Sarah', 'Wilson', '07.02.1960', 'China', 'Beijing', 'female', 'CF0192332E', PassportStatus.issued, ' '),
-        new PassportReq('Charlie', 'Thomas', '21.01.1976', 'England', 'London', 'male', 'LF0192332M', PassportStatus.issued, ' '),
-        new PassportReq('Michael', 'Johnson', '09.12.1987', 'France', 'Paris', 'male', 'MF0192332C', PassportStatus.denied, ' '),
-        new PassportReq('Audrey', 'Roberts', '15.07.1966', 'USA', 'New York', 'female', 'AF0192332R', PassportStatus.issued, ' '),
-        new PassportReq('David', 'Lewis', '03.08.1962', 'Singapore', 'Singapore', 'male', 'BF0192332F', PassportStatus.issued, ' ')
     ];
 
     if (activeRequest) {

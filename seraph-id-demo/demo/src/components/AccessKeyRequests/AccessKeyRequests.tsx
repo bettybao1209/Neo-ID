@@ -75,15 +75,6 @@ function AccessKeyRequests({ activeRequest, verified, issued, denied }: Props) {
 
 
     let requests: AccessKeyReq[] = [
-        new AccessKeyReq(1, 'New York', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.issued),
-        new AccessKeyReq(2, 'Florence', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.issued),
-        new AccessKeyReq(3, 'Zürich', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.notValid, AccessKeyStatus.denied),
-        new AccessKeyReq(4, 'Beijing', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.issued),
-        new AccessKeyReq(5, 'Paris', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.issued),
-        new AccessKeyReq(6, 'Madrid', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.notValid, AccessKeyStatus.issued),
-        new AccessKeyReq(7, 'New York', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.issued),
-        new AccessKeyReq(8, 'Florence', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.valid, AccessKeyStatus.denied),
-        new AccessKeyReq(9, 'Zürich', getCheckInDate(), getCheckOutDate(), generatePrice(), PassportStatus.notValid, AccessKeyStatus.issued)
     ];
 
     if (activeRequest) {
@@ -177,7 +168,7 @@ function AccessKeyRequests({ activeRequest, verified, issued, denied }: Props) {
                                             </TableCell>
                                             <TableCell>{req.checkIn}</TableCell>
                                             <TableCell align="right">{req.checkOut}</TableCell>
-                                            <TableCell align="right">{req.price} $ </TableCell>
+                                            <TableCell align="right">{req.price} GAS </TableCell>
                                             {applicantPassportStatus(req)}
                                             {accessKeyStatus(req)}
                                         </TableRow>

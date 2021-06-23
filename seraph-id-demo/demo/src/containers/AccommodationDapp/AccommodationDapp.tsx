@@ -115,6 +115,7 @@ export class AccommodationDapp extends React.Component<Props, State> {
             localStorage.setItem('flatId', `${id}`);
             localStorage.setItem('flatLocation', city);
             localStorage.setItem('price', price);
+            localStorage.setItem('isPaid', 'false');
             this.setState({ chosenFlat: flat });
         }
 
@@ -179,6 +180,7 @@ export class AccommodationDapp extends React.Component<Props, State> {
         const ownerDID = localStorage.getItem('ownerDID');
         const flatAddress = localStorage.getItem('flatLocation');
         const flatId = localStorage.getItem('flatId');
+        const isPaid = localStorage.getItem('isPaid');
 
         const validFrom = new Date();
         validFrom.setHours(0, 0, 0, 0);
@@ -189,7 +191,8 @@ export class AccommodationDapp extends React.Component<Props, State> {
         const newClaim = agencyIssuer.createClaim(claimID, configs.ACCESS_KEY_SCHEMA_NAME,
             {
                 'flatId': flatId,
-                'address': flatAddress
+                'address': flatAddress,
+                'isPaid': isPaid
             }, ownerDID ? ownerDID : '', validFrom, validTo);
 
 
@@ -206,7 +209,7 @@ export class AccommodationDapp extends React.Component<Props, State> {
 
                         localStorage.setItem('accessKeyClaimID', res.id);
                         localStorage.setItem('accessKeyClaim', JSON.stringify(res));
-
+                        
                         value.nextTip(`Play as ${Agents.owner} and try to open the door with the access key you just got. `);
 
                         value.changeAction('agencyPageAsOwner', 'success');
