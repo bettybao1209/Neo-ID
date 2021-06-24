@@ -192,7 +192,6 @@ export class AccommodationDapp extends React.Component<Props, State> {
             {
                 'flatId': flatId,
                 'address': flatAddress,
-                'isPaid': isPaid
             }, ownerDID ? ownerDID : '', validFrom, validTo);
 
 
