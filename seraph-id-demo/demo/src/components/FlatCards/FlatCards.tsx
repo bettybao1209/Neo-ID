@@ -39,16 +39,17 @@ function FlatCards({ flatBooked }: Props) {
         }
         getPriceFunc()
     }, []);
+
     const topFlats: FlatCard[] = [
-        { id: 1, pictureRef: 'flat_1', city: 'Florence', price: tokenPrice === 0 ? '' : GetTokenPrice(200, tokenPrice), rooms: 2, meters: 65, others: 'Bathtub' },
-        { id: 2, pictureRef: 'flat_2', city: 'Beijing', price: tokenPrice === 0 ? '' : GetTokenPrice(280, tokenPrice), rooms: 3, meters: 110, others: 'Garden' },
-        { id: 3, pictureRef: 'flat_3', city: 'New York', price: tokenPrice === 0 ? '' : GetTokenPrice(370, tokenPrice), rooms: 4, meters: 155, others: 'Terrace' },
+        { id: 1, pictureRef: configs.OBJECT_ID1, city: 'Florence', price: tokenPrice === 0 ? '' : GetTokenPrice(200, tokenPrice), rooms: 2, meters: 65, others: 'Bathtub' },
+        { id: 2, pictureRef: configs.OBJECT_ID2, city: 'Beijing', price: tokenPrice === 0 ? '' : GetTokenPrice(280, tokenPrice), rooms: 3, meters: 110, others: 'Garden' },
+        { id: 3, pictureRef: configs.OBJECT_ID3, city: 'New York', price: tokenPrice === 0 ? '' : GetTokenPrice(370, tokenPrice), rooms: 4, meters: 155, others: 'Terrace' },
     ];
 
     const bottomFlats: FlatCard[] = [
-        { id: 4, pictureRef: 'flat_4', city: 'Paris', price: tokenPrice === 0 ? '' : GetTokenPrice(195, tokenPrice), rooms: 2, meters: 54, others: 'Position' },
-        { id: 5, pictureRef: 'flat_5', city: 'Zürich', price: tokenPrice === 0 ? '' : GetTokenPrice(450, tokenPrice), rooms: 5, meters: 240, others: 'Magnific view' },
-        { id: 6, pictureRef: 'flat_6', city: 'Madrid', price: tokenPrice === 0 ? '' : GetTokenPrice(210, tokenPrice), rooms: 2, meters: 80, others: 'Pool' },
+        { id: 4, pictureRef: configs.OBJECT_ID4, city: 'Paris', price: tokenPrice === 0 ? '' : GetTokenPrice(195, tokenPrice), rooms: 2, meters: 54, others: 'Position' },
+        { id: 5, pictureRef: configs.OBJECT_ID5, city: 'Zürich', price: tokenPrice === 0 ? '' : GetTokenPrice(450, tokenPrice), rooms: 5, meters: 240, others: 'Magnific view' },
+        { id: 6, pictureRef: configs.OBJECT_ID6, city: 'Madrid', price: tokenPrice === 0 ? '' : GetTokenPrice(210, tokenPrice), rooms: 2, meters: 80, others: 'Pool' },
     ];
 
     const renderFlatsInRow = (flats: FlatCard[]) => {
@@ -149,12 +150,23 @@ function FlatCard({ imageRef, city, price, rooms, meters, others, clicked }: Car
 
     const style = { backgroundColor: theme.palette.error.main, color: 'white' };
 
+    const [imageData, setImageData] = useState('');
+    useEffect(() =>{
+    fetch('http://172.168.3.42:80/get/'+ configs.CONTAINER_ID + '/' + imageRef)
+        .then(response => response.blob())
+        .then(image => {
+            // Create a local URL of that image
+            const localUrl = URL.createObjectURL(image);
+            setImageData(localUrl);
+        });
+    }, []);
+
     return (
         <Card className="FlatCard">
             <CardActionArea>
                 <CardMedia
                     className="FlatPicture"
-                    image={require(`../../assets/${imageRef}.jpg`)}
+                    image={imageData}
                     title="Contemplative Reptile"
                 />
                 <CardContent className="FlatCardContent">
