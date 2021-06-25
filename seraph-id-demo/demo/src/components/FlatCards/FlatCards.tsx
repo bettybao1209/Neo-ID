@@ -11,7 +11,6 @@ import {PriceFeedService} from '../../pricefeed/pricefeedservice';
 import { useState, useEffect } from 'react';
 
 const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
-
 interface FlatCard {
     id: number;
     pictureRef: string;
@@ -152,7 +151,7 @@ function FlatCard({ imageRef, city, price, rooms, meters, others, clicked }: Car
 
     const [imageData, setImageData] = useState('');
     useEffect(() =>{
-    fetch('http://172.168.3.42:80/get/'+ configs.CONTAINER_ID + '/' + imageRef)
+    fetch('http://172.168.3.42:4030/get/'+ configs.CONTAINER_ID + '/' + imageRef)
         .then(response => response.blob())
         .then(image => {
             // Create a local URL of that image
