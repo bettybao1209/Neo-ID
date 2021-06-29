@@ -25,6 +25,7 @@ const PAY_FLAT_BTN_LABEL = 'Pay the flat';
 const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
 
 
+
 interface Props {
     ownerWallet: any
 }
@@ -33,18 +34,32 @@ interface State {
     dialogOpen: boolean;
     dialogTitle: string;
     dialogContent: string;
+    isPaid: string;
 }
 
 export class Owner extends React.Component<Props, State> {
+    neoline: any;
 
     public state: State = {
         dialogOpen: false,
         dialogTitle: '',
-        dialogContent: ''
+        dialogContent: '',
+        isPaid: 'false'
     };
+
+    constructor(props: Props) {
+        super(props);
+        this.neoline = new (window as any).NEOLineN3.Init();
+    }
+
+    // async getAccount(){
+    //     const { address, label } = await this.neoline.getAccount();
+    //     this.setState({address});
+    // }
 
     renderJSONObject = (objString: string) => {
 
+        
         const jsonStart = "{";
         const jsonEnd = "}"
 
@@ -69,7 +84,7 @@ export class Owner extends React.Component<Props, State> {
                         {this.renderJSONLevel(others)}
                     </div>
                     <p> {jsonEnd} <br /> </p>
-
+                   
                 </div>
             );
         }
@@ -102,11 +117,12 @@ export class Owner extends React.Component<Props, State> {
 
 
     renderDIDSection = (value: any) => {
+      
         if (value.actions.demoOwnerDID === 'todo') {
             return (
                 <div>
                     <p> Generate your DID and create a wallet. </p>
-                    <Fab onClick={() => { this.generateDID(value) }} variant="extended" color="primary">
+                    <Fab onClick={() => { this.generateDID(value)}} variant="extended" color="primary">
                         Generate DID
                     </Fab>
                 </div>
@@ -309,7 +325,7 @@ export class Owner extends React.Component<Props, State> {
                         const accessKeyClaim = this.props.ownerWallet.getClaim(accessKeyClaimID);
                         if (accessKeyClaim) {
                             console.log(localStorage);
-                            if (localStorage.getItem("isPaid") === 'false'){
+                            if (this.state.isPaid === 'false'){
                                 return (
                                     <div>
                                         <p> You have not paid the flat yet.
@@ -394,19 +410,46 @@ export class Owner extends React.Component<Props, State> {
 
     }
 
-    payFlat = (value: any) => {
+    payFlat = async (value: any) => {
         const accessKeyClaimID = localStorage.getItem('accessKeyClaimID');
         console.log('accessKeyClaimID', accessKeyClaimID);
         if (accessKeyClaimID) {
             const accessKeyClaim = this.props.ownerWallet.getClaim(accessKeyClaimID);
 
             if (accessKeyClaim) {
-                value.accessKeyClaim = accessKeyClaim;
-                const txid = pricefeed.payFlat(configs.OWNER_PRIVATE_KEY, configs.FLAT_WALLET_ADDRESS, Number(localStorage.getItem("price")));
-                if (txid != null){
-                    value.changeAction('demoOwnerPayFlat', 'demoOwnerOpenDoor');
-                }
-                localStorage.setItem('isPaid', "true");
+                console.log('accessKeyClaim', accessKeyClaim);
+                
+                const {address} = await this.neoline.getAccount();
+                this.neoline.send({
+                    fromAddress: address,
+                    toAddress: configs.FLAT_WALLET_ADDRESS,
+                    asset: 'GAS',
+                    amount: localStorage.getItem("price"),
+                    broadcastOverride: false
+                })
+                .then(result => {
+                    console.log('Transaction ID: ' + result.txid);
+                    this.setState({ isPaid: 'true'});
+                });
+                // .catch((type: string) => {
+                //     switch(type) {
+                //         case 'NO_PROVIDER':
+                //             console.log('No provider available.');
+                //             break;
+                //         case 'RPC_ERROR':
+                //             console.log('There was an error when broadcasting this transaction to the network.');
+                //             break;
+                //         case 'MALFORMED_INPUT':
+                //             console.log('The receiver address provided is not valid.');
+                //             break;
+                //         case 'CANCELED':
+                //             console.log('The user has canceled this transaction.');
+                //             break;
+                //         case 'INSUFFICIENT_FUNDS':
+                //             console.log('The user has insufficient funds to execute this transaction.');
+                //             break;
+                //     }
+                // });
             } else {
                 value.changeAction('demoOwnerOpenDoor', 'sharingCredentialsFailed');
             }
@@ -446,10 +489,12 @@ export class Owner extends React.Component<Props, State> {
 
 
     generateDID = async (value: any) => {
-
+        // const neoline = new (window as any).NEOLine.Init();
+        const { address, label } = await this.neoline.getAccount();
+        console.log("address is: ", address);
         value.changeAction('demoOwnerDID', 'waiting');
 
-        const did = this.props.ownerWallet.generateDID(DIDNetwork.PrivateNet, configs.OWNER_PRIVATE_KEY);
+        const did = this.props.ownerWallet.generateDID(configs.DID_NETWORK, address);
         localStorage.setItem('ownerDID', did);
         console.log('created DID', did);
 
