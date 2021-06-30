@@ -11,19 +11,12 @@ import SadFaceIcon from '@material-ui/icons/SentimentVeryDissatisfied';
 import HappyFaceIcon from '@material-ui/icons/SentimentVerySatisfied';
 import CodeIcon from '@material-ui/icons/Code';
 import * as configs from '../../configs';
-
-// Import from seraph-id-sdk 
-import { DIDNetwork } from '@sbc/seraph-id-sdk';
-
-import { PriceFeedService } from '../../pricefeed/pricefeedservice';
+import { getNeoDapiInstances } from '../../walletApi/neoline'
 
 const OWNER_GOV_BTN_LABEL = 'Apply for Passport';
 const OWNER_AGENCY_BTN_LABEL = 'Book a flat';
 const OWNER_DOOR_BTN_LABEL = 'Open the door';
 const PAY_FLAT_BTN_LABEL = 'Pay the flat';
-
-const pricefeed = new PriceFeedService(configs.PRICE_FEED_SERVICE, configs.NEO_RPC_URL, configs.DID_NETWORK, configs.MAGIC);
-
 
 
 interface Props {
@@ -38,7 +31,6 @@ interface State {
 }
 
 export class Owner extends React.Component<Props, State> {
-    neoline: any;
 
     public state: State = {
         dialogOpen: false,
@@ -46,16 +38,6 @@ export class Owner extends React.Component<Props, State> {
         dialogContent: '',
         isPaid: 'false'
     };
-
-    constructor(props: Props) {
-        super(props);
-        this.neoline = new (window as any).NEOLineN3.Init();
-    }
-
-    // async getAccount(){
-    //     const { address, label } = await this.neoline.getAccount();
-    //     this.setState({address});
-    // }
 
     renderJSONObject = (objString: string) => {
 
@@ -418,9 +400,9 @@ export class Owner extends React.Component<Props, State> {
 
             if (accessKeyClaim) {
                 console.log('accessKeyClaim', accessKeyClaim);
-                
-                const {address} = await this.neoline.getAccount();
-                this.neoline.send({
+                const neo3Dapi = (await getNeoDapiInstances()).neo3Dapi;
+                const {address} = await neo3Dapi.getAccount();
+                neo3Dapi.send({
                     fromAddress: address,
                     toAddress: configs.FLAT_WALLET_ADDRESS,
                     asset: 'GAS',
@@ -431,25 +413,6 @@ export class Owner extends React.Component<Props, State> {
                     console.log('Transaction ID: ' + result.txid);
                     this.setState({ isPaid: 'true'});
                 });
-                // .catch((type: string) => {
-                //     switch(type) {
-                //         case 'NO_PROVIDER':
-                //             console.log('No provider available.');
-                //             break;
-                //         case 'RPC_ERROR':
-                //             console.log('There was an error when broadcasting this transaction to the network.');
-                //             break;
-                //         case 'MALFORMED_INPUT':
-                //             console.log('The receiver address provided is not valid.');
-                //             break;
-                //         case 'CANCELED':
-                //             console.log('The user has canceled this transaction.');
-                //             break;
-                //         case 'INSUFFICIENT_FUNDS':
-                //             console.log('The user has insufficient funds to execute this transaction.');
-                //             break;
-                //     }
-                // });
             } else {
                 value.changeAction('demoOwnerOpenDoor', 'sharingCredentialsFailed');
             }
@@ -489,8 +452,8 @@ export class Owner extends React.Component<Props, State> {
 
 
     generateDID = async (value: any) => {
-        // const neoline = new (window as any).NEOLine.Init();
-        const { address, label } = await this.neoline.getAccount();
+        const neo3Dapi = (await getNeoDapiInstances()).neo3Dapi;
+        const { address, label } = await neo3Dapi.getAccount();
         console.log("address is: ", address);
         value.changeAction('demoOwnerDID', 'waiting');
 
