@@ -452,7 +452,13 @@ export class Owner extends React.Component<Props, State> {
 
 
     generateDID = async (value: any) => {
-        const neo3Dapi = (await getNeoDapiInstances()).neo3Dapi;
+        let neo3Dapi;
+        try{
+            neo3Dapi = (await getNeoDapiInstances()).neo3Dapi;
+        } catch (e) {
+            alert("You have not installed the browser plugin \"neoline\". \nPlease run this demo in a chrome browser with the extension neoline installed.\nRedirecting to chrome webstore...");
+            window.location.href = "https://chrome.google.com/webstore/search/neoline";
+        }
         const { address, label } = await neo3Dapi.getAccount();
         console.log("address is: ", address);
         value.changeAction('demoOwnerDID', 'waiting');
